@@ -1,13 +1,20 @@
 package com.capgemini.cabInvoiceGenerator;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class InvoiceServiceTest {
 
+	InvoiceGenerator invoiceGenerator = null;
+
+	@Before
+	public void CreateObject() {
+		invoiceGenerator = new InvoiceGenerator();
+	}
+
 	@Test
 	public void givenDistanceAndTimeShouldReturnTotalFare() {
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
 		double distance = 2.0;
 		int time = 5;
 		double fare = invoiceGenerator.calculateFare(distance, time);
@@ -16,7 +23,6 @@ public class InvoiceServiceTest {
 
 	@Test
 	public void givenLessDistanceOrTimeShouldReturnMinFare() {
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
 		double distance = 0.1;
 		int time = 1;
 		double fare = invoiceGenerator.calculateFare(distance, time);
@@ -25,10 +31,10 @@ public class InvoiceServiceTest {
 
 	@Test
 	public void givenMultipleRidesShouldReturnTotalFare() {
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
 		Ride[] rides = { new Ride(2.0, 5), new Ride(0.1, 1) };
-		double fare = invoiceGenerator.calculateFare(rides);
-		Assert.assertEquals(30, fare, 0.0);
+		InvoiceSummary invoiceSummary = invoiceGenerator.calculateFare(rides);
+		InvoiceSummary expectedSummary = new InvoiceSummary(2, 30.0);
+		Assert.assertEquals(expectedSummary, invoiceSummary);
 	}
 
 }
