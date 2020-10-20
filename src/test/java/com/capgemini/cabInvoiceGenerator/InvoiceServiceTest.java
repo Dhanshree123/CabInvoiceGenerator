@@ -7,10 +7,19 @@ import org.junit.Test;
 public class InvoiceServiceTest {
 
 	InvoiceService invoiceService = null;
+	RideRepository rideRepository = null;
+	Ride[] rides;
+	InvoiceSummary expectedSummary = null;
 
 	@Before
 	public void CreateObject() {
 		invoiceService = new InvoiceService();
+		rideRepository = new RideRepository();
+		invoiceService.setRideRepository(rideRepository);
+		rides = new Ride[] { new Ride(2.0, 5, CabRide.NORMAL), new Ride(0.1, 1, CabRide.PREMIUM),
+
+		};
+		expectedSummary = new InvoiceSummary(2, 45.0);
 	}
 
 	@Test
@@ -31,19 +40,15 @@ public class InvoiceServiceTest {
 
 	@Test
 	public void givenMultipleRidesShouldReturnTotalFare() {
-		Ride[] rides = { new Ride(2.0, 5), new Ride(0.1, 1) };
 		InvoiceSummary invoiceSummary = invoiceService.calculateFare(rides);
-		InvoiceSummary expectedSummary = new InvoiceSummary(2, 30.0);
 		Assert.assertEquals(expectedSummary, invoiceSummary);
 	}
 
 	@Test
 	public void givenUserIdAndRidesShouldReturnInvoiceSummary() {
 		String userId = "abc@gmail.com";
-		Ride[] rides = { new Ride(2.0, 5), new Ride(0.1, 1) };
 		invoiceService.addRides(userId, rides);
 		InvoiceSummary invoiceSummary = invoiceService.getInvoiceSummary(userId);
-		InvoiceSummary expectedSummary = new InvoiceSummary(2, 30.0);
 		Assert.assertEquals(expectedSummary, invoiceSummary);
 	}
 
